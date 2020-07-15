@@ -18,6 +18,10 @@ class Stack {
     return this._size === 0;
   }
 
+  get size() {
+    return this._size;
+  }
+
   push(value) {
 
     this[`_${this._size++}`] = value;
@@ -49,3 +53,11 @@ class Stack {
 }
 
 const stack1 = new Stack( 10 );
+
+stack1.push( null );
+stack1.push( x => x );
+stack1.push( {
+               name: 'Test'
+             } );
+
+console.log( JSON.stringify( stack1 ) );
