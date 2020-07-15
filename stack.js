@@ -23,12 +23,10 @@ class Stack {
   }
 
   push(value) {
-
-    this[`_${this._size++}`] = value;
-
-    if (this._size > this._maxSize) {
+    if (this._size >= this._maxSize) {
       throw new RangeError( 'Stack overflow' );
     }
+    this[`_${this._size++}`] = value;
 
     return this._size;
   }
