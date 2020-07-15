@@ -3,8 +3,14 @@
 class Stack {
 
   constructor(maxSize = 10000) {
-    this._size = 0;
+    if (typeof maxSize !== 'number') {
+      throw new TypeError();
+    }
+    if (isNaN( maxSize ) || maxSize < 0 || !Number.isInteger( maxSize )) {
+      throw new RangeError();
+    }
 
+    this._size = 0;
     this._maxSize = maxSize;
   }
 
@@ -41,3 +47,5 @@ class Stack {
   }
 
 }
+
+const stack1 = new Stack( 10 );
