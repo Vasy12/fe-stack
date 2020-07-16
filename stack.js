@@ -1,8 +1,11 @@
 'use strict';
 
+/**
+ * LIFO - last in first out
+ */
 class Stack {
 
-  constructor(maxSize = 10000) {
+  constructor(maxSize = 10000, ...args) {
     if (typeof maxSize !== 'number') {
       throw new TypeError();
     }
@@ -12,6 +15,10 @@ class Stack {
 
     this._size = 0;
     this._maxSize = maxSize;
+
+    for (let arg of args) {
+      this.push( arg );
+    }
   }
 
   get isEmpty() {
@@ -50,12 +57,49 @@ class Stack {
 
 }
 
-const stack1 = new Stack( 10 );
+const userStr = prompt() ?? '';
 
-stack1.push( null );
-stack1.push( x => x );
-stack1.push( {
-               name: 'Test'
-             } );
+const options = {
+  brackets: {
+    '@': '&'
+  }
+};
 
-console.log( JSON.stringify( stack1 ) );
+const result = checkCorrectBracketsSequence( userStr, options );
+
+alert( result
+       ? 'RIGHT'
+       : 'WRONG' );
+
+/**
+ *
+ * @param {string} str
+ * @param {object} [options]
+ * @param {object} options.brackets
+ * @returns {boolean}
+ */
+function checkCorrectBracketsSequence(str, options = {
+  brackets: {
+    '(': ')',
+  }
+}) {
+  const bracketsStack = new Stack( str.length );
+  const brackets = options.brackets;
+  const closeBrackets = Object.values( brackets );
+  for (const s of str) {
+    if (brackets[s]) {
+      bracketsStack.push( s );
+      continue;
+    }
+    if (closeBrackets.includes( s ) && bracketsStack.isEmpty) {
+      return false;
+    }
+    if (brackets[bracketsStack.pick()] === s) {
+      bracketsStack.pop();
+    }
+  }
+
+  return bracketsStack.isEmpty;
+}
+
+
