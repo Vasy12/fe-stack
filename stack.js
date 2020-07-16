@@ -61,7 +61,8 @@ const userStr = prompt() ?? '';
 
 const options = {
   brackets: {
-    '@': '&'
+    '(': ')',
+    '{': '}',
   }
 };
 

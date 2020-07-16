@@ -61,14 +61,42 @@ class MyMap {
 
 }
 
-const myFirstMap = new MyMap();
+const vocabulary = new Map();
 
-myFirstMap.set( 'key', 'VALUE' );
-myFirstMap.set( 'key', 'VALUE2' );
-myFirstMap.set( 'key', 'VALUE3' );
+vocabulary.set( 'cat', 'кот/кошка' );
+vocabulary.set( 'dog', 'собака' );
+vocabulary.set( 'squirrel', 'белка' );
+vocabulary.set( 'create', 'создать' );
+vocabulary.set( 'read', 'читать' );
+vocabulary.set( 'update', 'обновить' );
+vocabulary.set( 'delete', 'удалить' );
 
-const keyValue = myFirstMap.get( 'key' );
+const test = 'cat dog squirrel delete test';
+/**
+ *
+ * @param {string} str
+ * @param {string} [separator]
+ * @returns {string}
+ */
+function translate(str, separator = ' ') {
 
-console.log( keyValue );
+  const englishWords = str.split( separator );
+
+  const russianWords = englishWords.map( function (word) {
+
+    return vocabulary.get( word );
+
+  } );
+
+  return russianWords.join( separator );
+}
+
+const translate2 = (str, separator = ' ') => str
+  .split( separator )
+  .map( w => vocabulary.has( w )
+             ? vocabulary.get( w )
+             : w )
+  .join( separator );
 
 
+alert( translate2( test ) );
