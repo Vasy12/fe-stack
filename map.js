@@ -1,12 +1,22 @@
 'use strict';
 
+var triState = {
+  /** The true value */
+  TRUE: 1,
+  FALSE: -1,
+  /** @type {boolean} */
+  MAYBE: true
+};
+
 class MyMapIterator {
   /**
    *
    * @param {MyMap} myMap
+   * @param {'default'|'key'|'value'} [mode]
    */
-  constructor(myMap) {
+  constructor(myMap, mode = 'default') {
     this._myMap = myMap;
+    this._mode = mode;
     this._start = 0;
   }
 
@@ -17,11 +27,17 @@ class MyMapIterator {
         done: true,
       };
     }
-
+    const keyValuePair = this._myMap[this._start];
     return {
-      value: this._myMap[this._start],
+      value: this._mode === 'default'
+             ? keyValuePair
+             : keyValuePair[this._mode],
       done: this._start++ >= this._myMap.size
     };
+  }
+
+  [Symbol.iterator]() {
+    return this;
   }
 }
 
@@ -55,13 +71,55 @@ class MyMap {
     }
   }
 
+  keys() {
+    return new MyMapIterator( this, 'key' );
+  }
+
+  values() {
+    return new MyMapIterator( this, 'value' );
+  }
+
   [Symbol.iterator]() {
     return new MyMapIterator( this );
   }
 
 }
 
-const vocabulary = new Map();
+const usersToMessagesMap = new Map();
+
+const vova = {
+  id: 1,
+  name: 'Test',
+  surname: 'Testovich',
+  age: 17,
+};
+
+usersToMessagesMap.set( vova, [
+  {
+    userId: 1,
+    timestamp: '2020-10-12 14:45',
+    body: 'message body',
+  },
+  {
+    userId: 1,
+    timestamp: '2020-10-12 14:45',
+    body: 'message body',
+  },
+] );
+
+const vovasMessages = usersToMessagesMap.get( vova );
+
+vova.email = 'vova@gmail.com';
+
+const vovasMessages2 = usersToMessagesMap.get( vova );
+
+const vasya = {};
+
+usersToMessagesMap.set( vasya, [] );
+
+console.log( usersToMessagesMap.size );
+
+const vocabulary = new MyMap();
 
 vocabulary.set( 'cat', 'кот/кошка' );
 vocabulary.set( 'dog', 'собака' );
@@ -71,32 +129,5 @@ vocabulary.set( 'read', 'читать' );
 vocabulary.set( 'update', 'обновить' );
 vocabulary.set( 'delete', 'удалить' );
 
-const test = 'cat dog squirrel delete test';
-/**
- *
- * @param {string} str
- * @param {string} [separator]
- * @returns {string}
- */
-function translate(str, separator = ' ') {
-
-  const englishWords = str.split( separator );
-
-  const russianWords = englishWords.map( function (word) {
-
-    return vocabulary.get( word );
-
-  } );
-
-  return russianWords.join( separator );
-}
-
-const translate2 = (str, separator = ' ') => str
-  .split( separator )
-  .map( w => vocabulary.has( w )
-             ? vocabulary.get( w )
-             : w )
-  .join( separator );
-
-
-alert( translate2( test ) );
+const keys = [...vocabulary.keys()];
+const values = [...vocabulary.values()];
